@@ -1,5 +1,5 @@
 module "vpc_private" {
-  source                        = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/vpc"
+  source                        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc?ref=master"
   
   project_id                = "my-project"
   vpc_name                  = "my-vpc"
@@ -22,7 +22,7 @@ module "vpc_private" {
 }
 
 module "vpc_public" {
-  source                        = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/vpc"
+  source                        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc?ref=master"
   
   project_id                = "my-project"
   vpc_name                  = "my-vpc"
@@ -51,32 +51,32 @@ module "vpc_public" {
 
 
 
-module "gke" {
-  source = "./gke"
-  
-  project_id     = "my-project"
-  cluster_name   = "my-cluster"
-  location       = "us-central1-a"
-  network_name   = "my-vpc"
-  subnetwork_name = "my-subnet"
-  
-  initial_node_count      = 3
-  machine_type            = "n1-standard-2"
-  preemptible_nodes       = true
-  enable_autoscaling      = true
-  min_node_count          = 1
-  max_node_count          = 10
-  
-  enable_shielded_nodes   = true
-  enable_ip_alias         = true
-  cluster_secondary_range_name  = "pods"
-  services_secondary_range_name = "services"
-  release_channel         = "REGULAR"
-  
-  labels = {
-    environment = "production"
-  }
-}
+# module "gke" {
+#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//gke?ref=master"
+#   
+#   project_id     = "my-project"
+#   cluster_name   = "my-cluster"
+#   location       = "us-central1-a"
+#   network_name   = "my-vpc"
+#   subnetwork_name = "my-subnet"
+#   
+#   initial_node_count      = 3
+#   machine_type            = "n1-standard-2"
+#   preemptible_nodes       = true
+#   enable_autoscaling      = true
+#   min_node_count          = 1
+#   max_node_count          = 10
+#   
+#   enable_shielded_nodes   = true
+#   enable_ip_alias         = true
+#   cluster_secondary_range_name  = "pods"
+#   services_secondary_range_name = "services"
+#   release_channel         = "REGULAR"
+#   
+#   labels = {
+#     environment = "production"
+#   }
+# }
 
 # module "apigee" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/apigee"
