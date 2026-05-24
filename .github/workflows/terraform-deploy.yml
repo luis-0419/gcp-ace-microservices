@@ -38,7 +38,6 @@ on:
 env:
   TERRAFORM_VERSION: '1.15.4'
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  TF_BACKEND_BUCKET: ${{ secrets.GCP_TERRAFORM_BUCKET }}
 
 permissions:
   contents: read
@@ -47,17 +46,23 @@ permissions:
 
 jobs:
   authenticate-gcp:
-    name: Authenticate to GCP
+    name: Authenticate to GCP - ${{ matrix.environment }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [dev, prod]
     outputs:
       gcp_token: ${{ steps.auth.outputs.access_token }}
+    env:
+      GCP_SA_KEY: ${{ secrets[format('GCP_SA_KEY_{0}', matrix.environment)] }}
+      TF_BACKEND_BUCKET: ${{ secrets[format('GCP_TERRAFORM_BUCKET_{0}', matrix.environment)] }}
     
     steps:
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -65,6 +70,7 @@ jobs:
       - name: Verify GCP Authentication
         run: |
           echo "✓ Successfully authenticated to GCP Project: ${{ env.GCP_PROJECT_ID }}"
+          echo "Environment: ${{ matrix.environment }}"
           gcloud config get-value project
           gcloud auth list
 
@@ -107,6 +113,9 @@ jobs:
     strategy:
       matrix:
         environment: [dev, prod]
+    env:
+      GCP_SA_KEY: ${{ secrets[format('GCP_SA_KEY_{0}', matrix.environment)] }}
+      TF_BACKEND_BUCKET: ${{ secrets[format('GCP_TERRAFORM_BUCKET_{0}', matrix.environment)] }}
     
     steps:
       - name: Checkout code
@@ -120,7 +129,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -170,6 +179,9 @@ jobs:
         environment: [dev, prod]
       max-parallel: 1
     environment: ${{ matrix.environment }}
+    env:
+      GCP_SA_KEY: ${{ secrets[format('GCP_SA_KEY_{0}', matrix.environment)] }}
+      TF_BACKEND_BUCKET: ${{ secrets[format('GCP_TERRAFORM_BUCKET_{0}', matrix.environment)] }}
     
     steps:
       - name: Checkout code
@@ -183,7 +195,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
