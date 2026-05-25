@@ -204,17 +204,3 @@ jobs:
           name: terraform-output-${{ matrix.environment }}
           path: ./environments/terraform-output-${{ matrix.environment }}.json
           retention-days: 30
-
-  notify:
-    name: Notify Deployment Status
-    runs-on: ubuntu-latest
-    needs: [authenticate-gcp, terraform-validate, terraform-plan]
-    if: always()
-    
-    steps:
-      - name: Check Deployment Status
-        run: |
-          if [ "${{ needs.terraform-validate.result }}" != "success" ]; then
-            echo "Terraform validation failed"
-            exit 1
-          fi
