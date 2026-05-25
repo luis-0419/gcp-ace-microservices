@@ -23,7 +23,7 @@ env:
   GCP_WIF_PROVIDER: ${{ secrets.GCP_WIF_PROVIDER }}
   GCP_WIF_SERVICE_ACCOUNT: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}
   TF_BACKEND_BUCKET: ${{ secrets.GCP_TERRAFORM_BUCKET_DEV }}
-
+  environment_name: "terrafotm/state"
 permissions:
   contents: read
   pull-requests: write
@@ -88,6 +88,7 @@ jobs:
         run: |
           terraform init \
             -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" 
+            -backend-config="prefix=${{ env.environment_name }}"
 
       - name: Terraform Validate
         working-directory: ./environments
@@ -211,3 +212,4 @@ jobs:
           name: terraform-output-${{ matrix.environment }}
           path: ./environments/terraform-output-${{ matrix.environment }}.json
           retention-days: 30
+
