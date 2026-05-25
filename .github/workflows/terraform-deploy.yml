@@ -67,6 +67,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Authenticate to Google Cloud (OIDC)
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+          service_account_email: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
