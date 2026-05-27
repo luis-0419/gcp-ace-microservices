@@ -23,7 +23,7 @@ env:
   GCP_WIF_PROVIDER: ${{ secrets.GCP_WIF_PROVIDER }}
   GCP_WIF_SERVICE_ACCOUNT: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}
   TF_BACKEND_BUCKET: ${{ secrets.GCP_TERRAFORM_BUCKET_DEV }}
-  environment_name: "terrafotm/state"
+  environment_name: "terrafotm-state-dev"
 permissions:
   contents: read
   pull-requests: write
@@ -42,7 +42,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
-          service_account_email: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
+          service_account: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
