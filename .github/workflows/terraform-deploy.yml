@@ -89,7 +89,7 @@ jobs:
         working-directory: ./environments
         run: |
           terraform init \
-            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" 
+            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
             -backend-config="prefix=${{ env.environment_name }}"
 
       - name: Terraform Validate
@@ -129,7 +129,7 @@ jobs:
         run: |
           terraform init \
             -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
-            -backend-config="prefix=${{ matrix.environment }}"
+            -backend-config="prefix=terrafotm-state-${{ matrix.environment }}"
 
       - name: Terraform Plan - ${{ matrix.environment }}
         working-directory: ./environments
@@ -194,7 +194,7 @@ jobs:
         run: |
           terraform init \
             -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
-            -backend-config="prefix=${{ matrix.environment }}"
+            -backend-config="prefix=terrafotm-state-${{ matrix.environment }}"
 
       - name: Download Plan Artifact
         uses: actions/download-artifact@v4
