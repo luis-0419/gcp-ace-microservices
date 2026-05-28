@@ -7,7 +7,7 @@ module "vpc_private" {
   routing_mode                  = "REGIONAL"
   subnets           = [
     {
-      name                = "${var.vpc_name}-${var.environment}-subnet-us-central1"
+      name                = "${var.vpc_name}-${var.environment}-subnet-private-us-central1"
       region            = "us-central1"
       ip_cidr_range   = var.ip_cidr_range_private
       private_ip_google_access  = true
@@ -30,7 +30,7 @@ module "vpc_public" {
   routing_mode                  = "REGIONAL"
   subnets           = [
     {
-      name                = "${var.vpc_name}-${var.environment}-subnet-us-central1"
+      name                = "${var.vpc_name}-${var.environment}-subnet-public-us-central1"
       region            = "us-central1"
       ip_cidr_range   = var.ip_cidr_range_public
       private_ip_google_access  = true
