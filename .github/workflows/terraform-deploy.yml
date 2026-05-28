@@ -188,11 +188,11 @@ jobs:
             -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
             -backend-config="prefix=${{ env.environment_name }}"
 
-      - name: Download Plan Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan-dev.tfplan
-          path: ./environments
+      # - name: Download Plan Artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: tfplan-dev.tfplan
+      #     path: ./environments
 
       - name: Terraform Apply - ${{ matrix.environment }}
         working-directory: ./environments
