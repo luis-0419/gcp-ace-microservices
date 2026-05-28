@@ -1,46 +1,46 @@
 module "vpc_private" {
   source                        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc?ref=master"
   
-  project_id                = "my-project"
-  vpc_name                  = "my-vpc"
+  project_id                = var.project_id
+  vpc_name                  = "${var.vpc_name}-${var.environment}-private-vpc-001"
   auto_create_subnetworks   = false
   routing_mode                  = "REGIONAL"
   subnets           = [
     {
-      name                = "subnet-us"
+      name                = "${var.vpc_name}-${var.environment}-subnet-us-central1"
       region            = "us-central1"
-      ip_cidr_range   = "10.0.0.0/16"
+      ip_cidr_range   = var.ip_cidr_range_private
       private_ip_google_access  = true
       enable_flow_logs = false
     }
   ]
   
   labels = {
-    environment                 = "production"
-    team        = "platform"
+    environment                 = var.environment
+    team        = var.team
   }
 }
 
 module "vpc_public" {
   source                        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc?ref=master"
   
-  project_id                = "my-project_2"
-  vpc_name                  = "my-vpc_2"
+  project_id                = var.project_id
+  vpc_name                  = "${var.vpc_name}-${var.environment}-public-vpc-1"
   auto_create_subnetworks   = false
   routing_mode                  = "REGIONAL"
   subnets           = [
     {
-      name                = "subnet-us"
+      name                = "${var.vpc_name}-${var.environment}-subnet-us-central1"
       region            = "us-central1"
-      ip_cidr_range   = "12.0.0.0/16"
+      ip_cidr_range   = var.ip_cidr_range_public
       private_ip_google_access  = true
       enable_flow_logs = false
     }
   ]
   
   labels = {
-    environment                 = "production"
-    team        = "platform"
+    environment                 = var.environment
+    team        = var.team
   }
 }
 

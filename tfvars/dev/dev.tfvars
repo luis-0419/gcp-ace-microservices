@@ -1,0 +1,5 @@
+vpc_name    = "ace-vpc"
+environment = "dev"
+team        = "platform"
+ip_cidr_range_private = ["10.1.0.0/16"]
+ip_cidr_range_public = ["10.0.0.0/16"]
