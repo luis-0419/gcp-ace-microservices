@@ -103,12 +103,12 @@ jobs:
         working-directory: ./environments
         run: terraform validate
 
-      - name: Terraform Plan
-        working-directory: ./environments
-        run: |
-          terraform plan \
-            -var-file="../tfvars/dev/dev.tfvars" \
-            -out=tfplan-dev.tfplan
+      # - name: Terraform Plan
+      #   working-directory: ./environments
+      #   run: |
+      #     terraform plan \
+      #       -var-file="../tfvars/dev/dev.tfvars" \
+      #       -out=tfplan-dev.tfplan
 
   terraform-plan:
     name: Terraform Plan 
@@ -156,11 +156,11 @@ jobs:
           retention-days: 7
 
 
-  terraform-apply:
-    name: Apply Terraform - ${{ matrix.environment }}
+  Terraform-apply:
+    name: Terraform Apply
     runs-on: ubuntu-latest
     needs: [authenticate-gcp, terraform-plan]
-    if: (github.ref == 'refs/heads/master' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
     
     steps:
       - name: Checkout code
@@ -213,21 +213,7 @@ jobs:
           path: ./environments/terraform-output-dev.json
           retention-days: 30
 
-      - name: Comment Output on PR
-        if: github.event_name == 'push'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const output = JSON.parse(fs.readFileSync('./environments/terraform-output-dev.json', 'utf8'));
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## Terraform Output\n\`\`\`json\n${JSON.stringify(output, null, 2)}\n\`\`\``
-            });
-
-  terraform-destroy:
+  Terraform-destroy:
     name: Destroy Terraform Infrastructure
     runs-on: ubuntu-latest
     needs: authenticate-gcp
