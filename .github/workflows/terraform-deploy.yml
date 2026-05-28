@@ -81,10 +81,6 @@ jobs:
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
 
-      # - name: Terraform Format Check
-      #   working-directory: ./environments
-      #   run: terraform fmt -check -recursive
-
       - name: Terraform Init
         working-directory: ./environments
         run: |
@@ -96,124 +92,131 @@ jobs:
         working-directory: ./environments
         run: terraform validate
 
-  terraform-plan:
-    name: Plan Terraform - ${{ matrix.environment }}
-    runs-on: ubuntu-latest
-    needs: [authenticate-gcp, terraform]
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
-    strategy:
-      matrix:
-        environment: [dev, prod]
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
-
-      - name: Authenticate to Google Cloud (OIDC)
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
-          service_account: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
-          project_id: ${{ env.GCP_PROJECT_ID }}
-
-      - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Terraform Init
-        working-directory: ./environments
-        run: |
-          terraform init \
-            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
-            -backend-config="prefix=terrafotm-state-${{ matrix.environment }}"
-
-      - name: Terraform Plan - ${{ matrix.environment }}
+      - name: Terraform Plan
         working-directory: ./environments
         run: |
           terraform plan \
-            -var-file="../tfvars/${{ matrix.environment }}/${{ matrix.environment }}.tfvars" \
-            -out=tfplan-${{ matrix.environment }}.tfplan
+            -var-file="../tfvars/dev/dev.tfvars" \
+            -out=tfplan-dev.tfplan
 
-      - name: Save Plan Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfplan-${{ matrix.environment }}
-          path: ./environments/tfplan-${{ matrix.environment }}.tfplan
-          retention-days: 7
-
-      - name: Comment Plan on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const plan = fs.readFileSync('./environments/tfplan-${{ matrix.environment }}.tfplan', 'utf8');
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## Terraform Plan - ${{ matrix.environment }}\n\`\`\`\n${plan}\n\`\`\``
-            });
-
-  terraform-apply:
-    name: Apply Terraform - ${{ matrix.environment }}
-    runs-on: ubuntu-latest
-    needs: [authenticate-gcp, terraform-plan]
-    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
-    strategy:
-      matrix:
-        environment: [dev, prod]
-      max-parallel: 1
-    environment: ${{ matrix.environment }}
+  # terraform-plan:
+  #   name: Plan Terraform - ${{ matrix.environment }}
+  #   runs-on: ubuntu-latest
+  #   needs: [authenticate-gcp, terraform]
+  #   if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+  #   strategy:
+  #     matrix:
+  #       environment: [dev, prod]
     
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v3
+  #       with:
+  #         terraform_version: ${{ env.TERRAFORM_VERSION }}
 
-      - name: Authenticate to Google Cloud (OIDC)
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
-          service_account: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
-          project_id: ${{ env.GCP_PROJECT_ID }}
+  #     - name: Authenticate to Google Cloud (OIDC)
+  #       uses: google-github-actions/auth@v2
+  #       with:
+  #         workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+  #         service_account: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
+  #         project_id: ${{ env.GCP_PROJECT_ID }}
 
-      - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+  #     - name: Setup Cloud SDK
+  #       uses: google-github-actions/setup-gcloud@v2
 
-      - name: Terraform Init
-        working-directory: ./environments
-        run: |
-          terraform init \
-            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
-            -backend-config="prefix=terrafotm-state-${{ matrix.environment }}"
+  #     - name: Terraform Init
+  #       working-directory: ./environments
+  #       run: |
+  #         terraform init \
+  #           -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
+  #           -backend-config="prefix=terrafotm-state-${{ matrix.environment }}"
 
-      - name: Download Plan Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan-${{ matrix.environment }}
-          path: ./environments
+  #     - name: Terraform Plan - ${{ matrix.environment }}
+  #       working-directory: ./environments
+  #       run: |
+  #         terraform plan \
+  #           -var-file="../tfvars/${{ matrix.environment }}/${{ matrix.environment }}.tfvars" \
+  #           -out=tfplan-${{ matrix.environment }}.tfplan
 
-      - name: Terraform Apply - ${{ matrix.environment }}
-        working-directory: ./environments
-        run: terraform apply -auto-approve tfplan-${{ matrix.environment }}.tfplan
+  #     - name: Save Plan Artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: tfplan-${{ matrix.environment }}
+  #         path: ./environments/tfplan-${{ matrix.environment }}.tfplan
+  #         retention-days: 7
 
-      - name: Terraform Output
-        working-directory: ./environments
-        run: terraform output -json > terraform-output-${{ matrix.environment }}.json
+  #     - name: Comment Plan on PR
+  #       if: github.event_name == 'pull_request'
+  #       uses: actions/github-script@v7
+  #       with:
+  #         script: |
+  #           const fs = require('fs');
+  #           const plan = fs.readFileSync('./environments/tfplan-${{ matrix.environment }}.tfplan', 'utf8');
+  #           github.rest.issues.createComment({
+  #             issue_number: context.issue.number,
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             body: `## Terraform Plan - ${{ matrix.environment }}\n\`\`\`\n${plan}\n\`\`\``
+  #           });
 
-      - name: Upload Output
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-output-${{ matrix.environment }}
-          path: ./environments/terraform-output-${{ matrix.environment }}.json
-          retention-days: 30
+  # terraform-apply:
+  #   name: Apply Terraform - ${{ matrix.environment }}
+  #   runs-on: ubuntu-latest
+  #   needs: [authenticate-gcp, terraform-plan]
+  #   if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
+  #   strategy:
+  #     matrix:
+  #       environment: [dev, prod]
+  #     max-parallel: 1
+  #   environment: ${{ matrix.environment }}
+    
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v3
+  #       with:
+  #         terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+  #     - name: Authenticate to Google Cloud (OIDC)
+  #       uses: google-github-actions/auth@v2
+  #       with:
+  #         workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+  #         service_account: ${{ env.GCP_WIF_SERVICE_ACCOUNT }}
+  #         project_id: ${{ env.GCP_PROJECT_ID }}
+
+  #     - name: Setup Cloud SDK
+  #       uses: google-github-actions/setup-gcloud@v2
+
+  #     - name: Terraform Init
+  #       working-directory: ./environments
+  #       run: |
+  #         terraform init \
+  #           -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
+  #           -backend-config="prefix=terrafotm-state-${{ matrix.environment }}"
+
+  #     - name: Download Plan Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: tfplan-${{ matrix.environment }}
+  #         path: ./environments
+
+  #     - name: Terraform Apply - ${{ matrix.environment }}
+  #       working-directory: ./environments
+  #       run: terraform apply -auto-approve tfplan-${{ matrix.environment }}.tfplan
+
+  #     - name: Terraform Output
+  #       working-directory: ./environments
+  #       run: terraform output -json > terraform-output-${{ matrix.environment }}.json
+
+  #     - name: Upload Output
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: terraform-output-${{ matrix.environment }}
+  #         path: ./environments/terraform-output-${{ matrix.environment }}.json
+  #         retention-days: 30
 
