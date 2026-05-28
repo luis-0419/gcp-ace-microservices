@@ -196,7 +196,7 @@ jobs:
 
       - name: Terraform Apply - ${{ matrix.environment }}
         working-directory: ./environments
-        run: terraform apply -auto-approve tfplan-dev.tfplan
+        run: terraform apply -auto-approve
 
       - name: Terraform Output
         working-directory: ./environments
