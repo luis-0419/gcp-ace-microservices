@@ -2,7 +2,7 @@ module "vpc_private" {
   source                        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc?ref=master"
   
   project_id                = var.project_id
-  vpc_name                  = "${var.vpc_name}-${var.environment}-private-vpc-001"
+  vpc_name                  = "${var.vpc_name}-${var.environment}-private-001"
   auto_create_subnetworks   = false
   routing_mode                  = "REGIONAL"
   subnets           = [
@@ -25,7 +25,7 @@ module "vpc_public" {
   source                        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc?ref=master"
   
   project_id                = var.project_id
-  vpc_name                  = "${var.vpc_name}-${var.environment}-public-vpc-1"
+  vpc_name                  = "${var.vpc_name}-${var.environment}-public-001"
   auto_create_subnetworks   = false
   routing_mode                  = "REGIONAL"
   subnets           = [

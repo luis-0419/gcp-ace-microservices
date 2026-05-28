@@ -1,0 +1,6 @@
+project_id             = "project-d4c7e850-a47e-4536-b7d"
+vpc_name               = "ace-vpc"
+environment            = "prod"
+team                   = "platform"
+ip_cidr_range_private  = "10.3.0.0/16"
+ip_cidr_range_public   = "10.2.0.0/16"
