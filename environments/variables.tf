@@ -28,3 +28,10 @@ variable "ip_cidr_range_public" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+variable "project_id" {
+  description = "The GCP project ID."
+  type        = string
+  default     = "project-d4c7e850-a47e-4536-b7d"
+  
+}
