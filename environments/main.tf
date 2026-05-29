@@ -51,7 +51,6 @@ module "vpc_peering" {
   peer_network_name = module.vpc_public.network_name
   peer_project_id = var.project_id
   local_network_name = module.vpc_private.network_name
-  peer_network_region = "us-central1"
 
   
   labels = {
