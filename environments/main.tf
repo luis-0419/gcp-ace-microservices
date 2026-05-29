@@ -12,6 +12,16 @@ module "vpc_private" {
       ip_cidr_range   = var.ip_cidr_range_private
       private_ip_google_access  = true
       enable_flow_logs = false
+      secondary_ip_ranges = [
+        {
+          range_name    = "pods"
+          ip_cidr_range = "10.4.0.0/14"
+        },
+        {
+          range_name    = "services"
+          ip_cidr_range = "10.0.0.0/20"
+        }
+      ]
     }
   ]
   
