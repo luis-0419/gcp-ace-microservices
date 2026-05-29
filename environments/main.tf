@@ -44,9 +44,24 @@ module "vpc_public" {
   }
 }
 
-# module "vpc_peering" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/vpc_peering"
-# }
+module "vpc_peering" {
+  source            =  "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc_peering?ref=master"
+
+  project_id = var.project_id
+  peer_name = "${var.vpc_name}-${var.environment}-peering-001"
+  network_name = module.vpc_private.network_name
+  peer_network_name = module.vpc_public.network_name
+  peer_project_id = var.project_id
+
+  
+  labels = {
+    environment                 = var.environment
+    team        = var.team
+  }
+
+
+  depends_on = [ module.vpc_private, module.vpc_public ]
+}
 
 
 
