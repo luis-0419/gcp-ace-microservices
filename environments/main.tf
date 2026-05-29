@@ -65,32 +65,32 @@ module "vpc_peering" {
 
 
 
-# module "gke" {
-#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//gke?ref=master"
-#   
-#   project_id     = "my-project"
-#   cluster_name   = "my-cluster"
-#   location       = "us-central1-a"
-#   network_name   = "my-vpc"
-#   subnetwork_name = "my-subnet"
-#   
-#   initial_node_count      = 3
-#   machine_type            = "n1-standard-2"
-#   preemptible_nodes       = true
-#   enable_autoscaling      = true
-#   min_node_count          = 1
-#   max_node_count          = 10
-#   
-#   enable_shielded_nodes   = true
-#   enable_ip_alias         = true
-#   cluster_secondary_range_name  = "pods"
-#   services_secondary_range_name = "services"
-#   release_channel         = "REGULAR"
-#   
-#   labels = {
-#     environment = "production"
-#   }
-# }
+module "gke" {
+  source                       = "git::https://github.com/luis-0419/gcp-terraform-modules.git//gke?ref=master"
+  
+  project_id                   = var.project_id
+  cluster_name   = "gke-${var.environment}-cluster-001"
+  location       = var.location
+  network_name   = module.vpc_private.network_name
+  subnetwork_name = module.vpc_private.subnets[0].name
+
+  initial_node_count           = var.initial_node_count
+  machine_type            = var.machine_type
+  preemptible_nodes       = var.preemptible_nodes
+  enable_autoscaling      = var.enable_autoscaling
+  min_node_count          = var.min_node_count
+  max_node_count          = var.max_node_count
+  
+  enable_shielded_nodes   = true
+  enable_ip_alias         = true
+  cluster_secondary_range_name  = "pods"
+  services_secondary_range_name = "services"
+  release_channel         = "REGULAR"
+  
+  labels = {
+    environment = var.environment
+  }
+}
 
 # module "apigee" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/apigee"
