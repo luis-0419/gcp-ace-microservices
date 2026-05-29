@@ -45,7 +45,7 @@ module "vpc_public" {
 }
 
 module "vpc_peering" {
-  source            =  "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc_peering?ref=master"
+  source             =  "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc_peering?ref=master"
 
   project_id = var.project_id
   peer_network_name = module.vpc_public.network_name
