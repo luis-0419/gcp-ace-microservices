@@ -1,4 +1,4 @@
-project_id             = ""
+project_id             = "project-d4c7e850-a47e-4536-b7d"
 vpc_name               = "ace-vpc"
 environment            = "dev"
 team                   = "platform"

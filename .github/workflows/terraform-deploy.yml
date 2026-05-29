@@ -74,6 +74,7 @@ jobs:
     name: Terraform Init
     runs-on: ubuntu-latest
     needs: authenticate-gcp
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.action != 'destroy'
     
     steps:
       - name: Checkout code
@@ -114,6 +115,7 @@ jobs:
     name: Terraform Plan 
     runs-on: ubuntu-latest
     needs: [authenticate-gcp, terraform-init]
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.action != 'destroy'
     
     steps:
       - name: Checkout code
