@@ -72,7 +72,7 @@ module "gke" {
   cluster_name   = "gke-${var.environment}-cluster-001"
   location       = var.location
   network_name   = module.vpc_private.network_name
-  subnetwork_name = module.vpc_private.subnets[0].name
+  subnetwork_name = module.vpc_private.subnet_names[0]
 
   initial_node_count           = var.initial_node_count
   machine_type            = var.machine_type
