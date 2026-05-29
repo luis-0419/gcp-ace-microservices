@@ -198,7 +198,7 @@ jobs:
 
       - name: Terraform Apply - ${{ matrix.environment }}
         working-directory: ./environments
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file="../tfvars/dev/dev.tfvars"
 
       - name: Terraform Output
         working-directory: ./environments

@@ -90,6 +90,9 @@ module "gke" {
   labels = {
     environment = var.environment
   }
+
+
+  depends_on                    = [ module.vpc_peering ]
 }
 
 # module "apigee" {
