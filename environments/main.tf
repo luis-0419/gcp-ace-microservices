@@ -48,10 +48,10 @@ module "vpc_peering" {
   source            =  "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc_peering?ref=master"
 
   project_id = var.project_id
-  peer_name = "${var.vpc_name}-${var.environment}-peering-001"
-  network_name = module.vpc_private.network_name
   peer_network_name = module.vpc_public.network_name
   peer_project_id = var.project_id
+  local_network_name = module.vpc_private.network_name
+  peer_network_region = "us-central1"
 
   
   labels = {
