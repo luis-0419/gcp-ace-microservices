@@ -106,7 +106,7 @@ module "gke" {
 }
 
 module "private_lb" {
-  source              = "git::https://github.com/luis-0419/gcp-terraform-modules.git//private_lb?ref=master"
+  source                            = "git::https://github.com/luis-0419/gcp-terraform-modules.git//internal_lb?ref=master"
 
   project_id         = var.project_id
   load_balancer_name               = "private-lb-${var.environment}-001"
