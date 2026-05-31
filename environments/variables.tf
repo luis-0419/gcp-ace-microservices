@@ -20,13 +20,13 @@ variable "team" {
 variable "ip_cidr_range_private" {
   description = "The IP CIDR range for the private subnet."
   type        = string
-  default     = "10.1.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 variable "ip_cidr_range_public" {
   description = "The IP CIDR range for the public subnet."
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.11.0.0/16"
 }
 
 variable "project_id" {
