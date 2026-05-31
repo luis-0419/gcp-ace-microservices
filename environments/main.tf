@@ -110,6 +110,9 @@ module "private_lb" {
 
   project_id         = var.project_id
   load_balancer_name               = "private-lb-${var.environment}-001"
+  network_name       = module.vpc_private.network_name
+  subnetwork_name    = module.vpc_private.subnet_names[0]
+  region            = var.location
   labels = {
     environment                    = var.environment
   }
