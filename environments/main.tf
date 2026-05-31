@@ -122,32 +122,32 @@ module "private_lb" {
 }
 
 
-# module "apigee" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/apigee"
+module "apigee" {
+  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/apigee"
 
-# }
+}
 
 
-# module "psc" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/psc"
-# }
+module "psc" {
+  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/psc"
+}
 
-# module "external_lb" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/external_lb"
-# }
+module "external_lb" {
+  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/external_lb"
+}
 
-# module "cloud_armor" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/cloud_armor"
-# }
+module "cloud_armor" {
+  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/cloud_armor"
+}
+
+module "virtual_machine" {
+  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/compute"
+}
+
+module "registry" {
+  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/registry"
+}
 
 # module "cloud_nat" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/cloud_nat"
-# }
-
-# module "registry" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/registry"
-# }
-
-# module "virtual_machine" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/compute"
 # }
