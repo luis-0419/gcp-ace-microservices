@@ -55,9 +55,9 @@ module "vpc_public" {
 }
 
 module "vpc_peering" {
-  source             =  "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc_peering?ref=master"
+  source                        =  "git::https://github.com/luis-0419/gcp-terraform-modules.git//vpc_peering?ref=master"
 
-  project_id = var.project_id
+  project_id                    = var.project_id
   peer_network_name = module.vpc_public.network_name
   peer_project_id = var.project_id
   local_network_name = module.vpc_private.network_name
@@ -69,7 +69,7 @@ module "vpc_peering" {
   }
 
 
-  depends_on = [ module.vpc_private, module.vpc_public ]
+  depends_on                    = [ module.vpc_private, module.vpc_public ]
 }
 
 
@@ -110,8 +110,8 @@ module "private_lb" {
 
   project_id         = var.project_id
   load_balancer_name               = "private-lb-${var.environment}-001"
-  network_name       = module.vpc_private.network_name
-  subnetwork_name    = module.vpc_private.subnet_names[0]
+  network_id       = module.vpc_private.network_id
+  subnetwork_name    = module.vpc_private.subnet_ids[0]
   region            = var.location
   labels = {
     environment                    = var.environment
