@@ -117,6 +117,8 @@ module "private_lb" {
     environment                    = var.environment
   }
 
+
+  depends_on                       = [ module.gke ]
 }
 
 
