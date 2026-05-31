@@ -105,6 +105,21 @@ module "gke" {
   depends_on                    = [ module.vpc_peering ]
 }
 
+module "private_lb" {
+  source              = "git::https://github.com/luis-0419/gcp-terraform-modules.git//private_lb?ref=master"
+
+  project_id         = var.project_id
+  load_balancer_name               = "private-lb-${var.environment}-001"
+  region             = var.location
+  network            = module.vpc_private.network_name
+  subnetwork         = module.vpc_private.subnet_names[0]
+  labels = {
+    environment = var.environment
+  }
+
+}
+
+
 # module "apigee" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/apigee"
 
@@ -117,10 +132,6 @@ module "gke" {
 
 # module "external_lb" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/external_lb"
-# }
-
-# module "private_lb" {
-#   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/private_lb"
 # }
 
 # module "cloud_armor" {
