@@ -141,9 +141,12 @@ module "psc" {
   service_connection_name = "psc-${var.environment}-001"
   reserved_ip_range = var.ip_cidr_range_private
   network_id     = module.vpc_private.network_id
+  service_name   = "apigee"
   labels = {
     environment           = var.environment
   }
+
+  depends_on = [ module.gke ]
 }
 
 # module "external_lb" {
