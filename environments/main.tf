@@ -138,11 +138,11 @@ module "psc" {
   source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//psc?ref=master"
 
   project_id     = var.project_id
-  service_connector_name = "psc-${var.environment}-001"
-  reserve_ip_range = "psc-ip-${var.environment}-001"
+  service_connection_name = "psc-${var.environment}-001"
+  reserved_ip_range = module.vpc_private.subnets[0].ip_cidr_range
   network_id     = module.vpc_private.network_id
   labels = {
-    environment          = var.environment
+    environment           = var.environment
   }
 }
 
