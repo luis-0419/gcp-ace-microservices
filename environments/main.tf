@@ -106,7 +106,7 @@ module "gke" {
 }
 
 module "private_lb" {
-  source                            = "git::https://github.com/luis-0419/gcp-terraform-modules.git//internal_lb?ref=master"
+  source                           = "git::https://github.com/luis-0419/gcp-terraform-modules.git//internal_lb?ref=master"
 
   project_id         = var.project_id
   load_balancer_name               = "private-lb-${var.environment}-001"
@@ -122,31 +122,50 @@ module "private_lb" {
 }
 
 
-module "apigee" {
-  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/apigee"
+# module "apigee" {
+#   source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//apigee?ref=master"
 
-}
+#   project_id      = var.project_id
+#   org_name   = "apigee-${var.environment}-org-001"
+#   env_name   = "apigee-${var.environment}-env-001"
+#   labels = {
+#     environment   = var.environment
+#   }
+# }
 
 
 module "psc" {
-  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/psc"
+  source        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//psc?ref=master"
+
+  project_id     = var.project_id
+  name           = "psc-${var.environment}-001"
+  network_id     = module.vpc_private.network_id
+  subnetwork_id  = module.vpc_private.subnet_ids[0]
+  region          = "us-central1"
+  labels = {
+    environment   = var.environment
+  }
 }
 
-module "external_lb" {
-  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/external_lb"
-}
+# module "external_lb" {
+#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//external_lb?ref=master"
+# }
 
-module "cloud_armor" {
-  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/cloud_armor"
-}
+# module "cloud_armor" {
+#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//cloud_armor?ref=master"
+# }
 
-module "virtual_machine" {
-  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/compute"
-}
+# module "virtual_machine" {
+#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//compute?ref=master"
+# }
 
-module "registry" {
-  source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/registry"
-}
+# module "registry" {
+#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//registry?ref=master"
+# }
+
+# module "bucket" {
+#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//bucket?ref=master"
+# }
 
 # module "cloud_nat" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/cloud_nat"
