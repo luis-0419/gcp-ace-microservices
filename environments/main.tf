@@ -135,7 +135,7 @@ module "private_lb" {
 
 
 module "psc" {
-  source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//psc?ref=master"
+  source                  = "git::https://github.com/luis-0419/gcp-terraform-modules.git//psc?ref=master"
 
   project_id     = var.project_id
   service_connection_name = "psc-${var.environment}-001"
@@ -146,28 +146,68 @@ module "psc" {
     environment           = var.environment
   }
 
-  depends_on = [ module.gke ]
+  depends_on              = [ module.gke ]
 }
 
-# module "external_lb" {
-#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//external_lb?ref=master"
-# }
+module "external_lb" {
+  source             = "git::https://github.com/luis-0419/gcp-terraform-modules.git//external_lb?ref=master"
 
-# module "cloud_armor" {
-#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//cloud_armor?ref=master"
-# }
+  project_id       = var.project_id
+  load_balancer_name = "external-lb-${var.environment}-001"
+  network_id       = module.vpc_public.network_id
+  subnetwork_id    = module.vpc_public.subnet_ids[0]
+  region            = "us-central1"
+  labels = {
+    environment      = var.environment
+  }
+}
 
-# module "virtual_machine" {
-#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//compute?ref=master"
-# }
+module "cloud_armor" {
+  source      = "git::https://github.com/luis-0419/gcp-terraform-modules.git//cloud_armor?ref=master"
 
-# module "registry" {
-#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//registry?ref=master"
-# }
+  project_id = var.project_id
+  policy_name = "cloud-armor-${var.environment}-001"
+  labels = {
+    environment = var.environment
+  }
+}
 
-# module "bucket" {
-#   source = "git::https://github.com/luis-0419/gcp-terraform-modules.git//bucket?ref=master"
-# }
+module "virtual_machine" {
+  source        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//compute?ref=master"
+
+  project_id = var.project_id
+  instance_name = "vm-${var.environment}-001"
+  machine_type = "n1-standard-1"
+  zone = "us-central1-a"
+  network_interface = {
+    network_id = module.vpc_private.network_id
+    subnetwork_id = module.vpc_private.subnet_ids[0]
+    access_config = false
+  }
+  labels = {
+    environment = var.environment
+  }
+}
+
+module "registry" {
+  source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//registry?ref=master"
+
+  project_id = var.project_id
+  repository_name = "registry-${var.environment}-001"
+  labels = {
+    environment = var.environment
+  }
+}
+
+module "bucket" {
+  source        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//bucket?ref=master"
+  
+  project_id = var.project_id
+  bucket_name   = "bucket-${var.environment}-001"
+  labels   = {
+    environment = var.environment
+  }
+}
 
 # module "cloud_nat" {
 #   source = "https://github.com/luis-0419/gcp-terraform-modules/tree/master/cloud_nat"
