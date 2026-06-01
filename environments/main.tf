@@ -135,15 +135,14 @@ module "private_lb" {
 
 
 module "psc" {
-  source        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//psc?ref=master"
+  source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//psc?ref=master"
 
   project_id     = var.project_id
-  name           = "psc-${var.environment}-001"
+  service_connector_name = "psc-${var.environment}-001"
+  reserve_ip_range = "psc-ip-${var.environment}-001"
   network_id     = module.vpc_private.network_id
-  subnetwork_id  = module.vpc_private.subnet_ids[0]
-  region          = "us-central1"
   labels = {
-    environment   = var.environment
+    environment          = var.environment
   }
 }
 
