@@ -179,8 +179,8 @@ module "virtual_machine" {
   machine_type = "n1-standard-1"
   zone = "us-central1-a"
   network_interface = {
-    network_id = module.vpc_private.network_id
-    subnetwork_id = module.vpc_private.subnet_ids[0]
+    network = module.vpc_private.network_name
+    subnetwork = module.vpc_private.subnet_names[0]
     access_config = false
   }
   labels = {
