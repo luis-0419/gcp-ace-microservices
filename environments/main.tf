@@ -139,7 +139,7 @@ module "psc" {
 
   project_id     = var.project_id
   service_connection_name = "psc-${var.environment}-001"
-  reserved_ip_range = module.vpc_private.subnets[0].ip_cidr_range
+  reserved_ip_range = var.ip_cidr_range_private
   network_id     = module.vpc_private.network_id
   labels = {
     environment           = var.environment
