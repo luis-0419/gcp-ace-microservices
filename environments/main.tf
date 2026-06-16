@@ -149,17 +149,17 @@ module "psc" {
   depends_on              = [ module.gke ]
 }
 
-module "external_lb" {
-  source             = "git::https://github.com/luis-0419/gcp-terraform-modules.git//external_lb?ref=master"
+# module "external_lb" {
+#   source             = "git::https://github.com/luis-0419/gcp-terraform-modules.git//external_lb?ref=master"
 
-  project_id       = var.project_id
-  load_balancer_name = "external-lb-${var.environment}-001"
-  network_name       = module.vpc_public.network_name
-  subnetwork_name    = module.vpc_public.subnet_names[0]
-  labels = {
-    environment      = var.environment
-  }
-}
+#   project_id       = var.project_id
+#   load_balancer_name = "external-lb-${var.environment}-001"
+#   network_name       = module.vpc_public.network_name
+#   subnetwork_name    = module.vpc_public.subnet_names[0]
+#   labels = {
+#     environment      = var.environment
+#   }
+# }
 
 module "cloud_armor" {
   source      = "git::https://github.com/luis-0419/gcp-terraform-modules.git//cloud_armor?ref=master"
