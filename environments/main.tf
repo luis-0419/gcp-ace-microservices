@@ -172,20 +172,22 @@ module "cloud_armor" {
 }
 
 module "virtual_machine" {
-  source        = "git::https://github.com/luis-0419/gcp-terraform-modules.git//compute?ref=master"
+  source            = "git::https://github.com/luis-0419/gcp-terraform-modules.git//compute?ref=master"
 
-  project_id = var.project_id
+  project_id        = var.project_id
   instance_name = "vm-${var.environment}-001"
   machine_type = "n1-standard-1"
   zone = "us-central1-a"
   network_interface = {
-    network = module.vpc_private.network_name
+    network         = module.vpc_private.network_name
     subnetwork = module.vpc_private.subnet_names[0]
     access_config = false
   }
   labels = {
-    environment = var.environment
+    environment     = var.environment
   }
+
+  depends_on = [ module.vpc_private ]
 }
 
 module "registry" {
@@ -196,6 +198,8 @@ module "registry" {
   labels = {
     environment = var.environment
   }
+
+  depends_on = [ module.gke ]
 }
 
 module "bucket" {
