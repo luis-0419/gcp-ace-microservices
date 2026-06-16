@@ -126,8 +126,8 @@ module "apigee" {
   source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//apigee?ref=master"
 
   project_id      = var.project_id
-  org_name   = "apigee-${var.environment}-org-001"
-  env_name   = "apigee-${var.environment}-env-001"
+  organization_name   = "apigee-${var.environment}-org-001"
+  environment_name   = "apigee-${var.environment}-env-001"
   labels = {
     environment   = var.environment
   }
