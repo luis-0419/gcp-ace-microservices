@@ -141,6 +141,7 @@ module "psc" {
   service_connection_name = "psc-${var.environment}-001"
   reserved_ip_range = var.ip_cidr_range_private
   network_id     = module.vpc_private.network_id
+  subnetwork_id  = module.vpc_private.subnet_ids[0]
   service_name   = "apigee"
   labels = {
     environment           = var.environment
