@@ -157,7 +157,6 @@ module "external_lb" {
   load_balancer_name = "external-lb-${var.environment}-001"
   network_name       = module.vpc_public.network_name
   subnetwork_name    = module.vpc_public.subnet_names[0]
-  region              = "us-central1"
   labels = {
     environment      = var.environment
   }
