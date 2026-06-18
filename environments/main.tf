@@ -122,16 +122,16 @@ module "private_lb" {
 }
 
 
-module "apigee" {
-  source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//apigee?ref=master"
+# module "apigee" {
+#   source          = "git::https://github.com/luis-0419/gcp-terraform-modules.git//apigee?ref=master"
 
-  project_id      = var.project_id
-  organization_name   = "apigee-${var.environment}-org-001"
-  environment_name   = "apigee-${var.environment}-env-001"
-  labels = {
-    environment   = var.environment
-  }
-}
+#   project_id      = var.project_id
+#   organization_name   = "apigee-${var.environment}-org-001"
+#   environment_name   = "apigee-${var.environment}-env-001"
+#   labels = {
+#     environment   = var.environment
+#   }
+# }
 
 
 module "psc" {
@@ -157,6 +157,7 @@ module "external_lb" {
   load_balancer_name = "external-lb-${var.environment}-001"
   network_name       = module.vpc_public.network_name
   subnetwork_name    = module.vpc_public.subnet_names[0]
+  region              = "us-central1"
   labels = {
     environment      = var.environment
   }
